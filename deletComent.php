@@ -1,5 +1,5 @@
 <?php 
-    $ID = $_POST["ID"];
+    $ID = $_POST["ID"]; 
     $conn=mysqli_connect("localhost", "root", "", "pb");
     $sql = "SELECT id_coment FROM coments";
     $result=mysqli_query($conn,$sql) or exit(mysqli_error($conn));
