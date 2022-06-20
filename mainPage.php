@@ -45,6 +45,20 @@
             margin: 10px;
         }
 
+        .popup2 {
+            display: none;
+            bottom: 0;
+            left: 15px;
+            border: 3px solid #f1f1f1;
+            border-radius: 5px;
+            z-index: 50;
+            margin-left: 20px;
+        }
+
+        .popup2 form {
+            margin: 10px;
+        }
+
         .close {
             padding: 2px;
             font-weight: bold;
@@ -179,6 +193,10 @@
 
                     <?php
                     $conn = mysqli_connect("localhost", "root", "", "pb");
+                    if (isset($_GET['ID'])) {
+                        $id = $_GET['ID'];
+                        $delete = mysqli_query($conn, "DELETE FROM cenik WHERE ID = $id");
+                    }
                     $sql = "SELECT * FROM cenik";
                     $info = mysqli_query($conn, $sql);
                     $stVrstic = mysqli_num_rows($info);
@@ -198,7 +216,6 @@
 
                     $x = 1;
                     if ($stVrstic) {
-
                         do {
                             $row = mysqli_fetch_assoc($info);
 
@@ -207,36 +224,70 @@
                                 <td>" . $row['Velikost'] . "</td>
                                 <td>" . $row['Barva'] . "</td>
                                 <td>" . $row['Cena'] . "</td>
+                            </tr>
+                            <tr>
+                                <td><button><a href='?ID=" . $row['ID'] . "' style='text-decoration:none;'>DELETE</a></button></td>
+                                <td></td>
+                                <td><button type='button' onclick='openForm(".$row['ID'].")' style='height: min-content;' value='" . $row['ID'] . "' name='ID'>Update</button></td>
                             </tr>";
                             $x++;
                         } while ($x <= $stVrstic);
+
 
                         echo '</table>';
                     } else {
                         echo "ERROR";
                     }
                     ?>
-                    <button type="button" onclick="openForm()" style="height: min-content;">Open</button>
-                    <div class="popup" id="myForm">
-                        <button type="button" class="close" onclick="closeForm()">X</button>
-                        <form action="dodajCene.php" action="POST">
-                            <label for="Velikost">Velikost:</label><br>
-                            <input type="text" name="Velikost" placeholder="Velikost"><br>
-                            <label for="Barva">Barva:</label><br>
-                            <input type="text" name="Barva" placeholder="Barva"><br>
-                            <label for="Cena">Cena: </label><br>
-                            <input type="text" name="Cena" placeholder="Cena"><br>
+                    <div>
+                    <button type='button' onclick='openForm2()' style='height: min-content;'>ADD</button>
+                    </div>
+                    <div class='popup' id='myForm'>
+                        <button type='button' class='close' onclick='closeForm()'>X</button>
+                        <form action='updateCene.php' method='POST'>
+                            <label for='velikost'>Velikost:</label><br>
+                            <input type='text' name='velikost' placeholder='Velikost'><br>
+                            <label for='barva'>Barva:</label><br>
+                            <input type='text' name='barva' placeholder='Barva'><br>
+                            <label for='cena'>Cena: </label><br>
+                            <input type='text' name='cena' placeholder='Cena'><br>
+                            <input type='hidden' name='ID' placeholder='Cena' id="input" value=""><br>
+                            <input type='hidden' name='methodes' value="1"><br>
 
-                            <input type="submit" value="SUBMIT">
+                            <input type='submit' value='SUBMIT'>
+                        </form>
+                    </div>
+                    <div class='popup2' id='myForm2'>
+                        <button type='button' class='close' onclick='closeForm2()'>X</button>
+                        <form action='dodajCene.php' method='POST'>
+                            <label for='velikost'>Velikost:</label><br>
+                            <input type='text' name='velikost' placeholder='Velikost'><br>
+                            <label for='barva'>Barva:</label><br>
+                            <input type='text' name='barva' placeholder='Barva'><br>
+                            <label for='cena'>Cena: </label><br>
+                            <input type='text' name='cena' placeholder='Cena'><br>
+                            <input type='hidden' name='ID' placeholder='Cena' id="input" value=""><br>
+                            <input type='hidden' name='methodes' value="2"><br>
+
+                            <input type='submit' value='SUBMIT'>
                         </form>
                     </div>
                     <script>
-                        function openForm() {
+                        function openForm(ID) {
                             document.getElementById("myForm").style.display = "block";
+                            document.getElementById("input").value=ID;
                         }
 
                         function closeForm() {
                             document.getElementById("myForm").style.display = "none";
+                        }
+
+                        function openForm2() {
+                            document.getElementById("myForm2").style.display = "block";
+                        }
+
+                        function closeForm2() {
+                            document.getElementById("myForm2").style.display = "none";
                         }
                     </script>
                 </div>
